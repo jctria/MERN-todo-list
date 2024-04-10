@@ -2,14 +2,19 @@ import { Component, Fragment } from 'react';
 import { Card, CardText, CardBody, CardTitle, CardSubtitle, Container, Alert } from 'reactstrap';
 import { connect } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { getTodos, deleteTodo } from '../actions/todoActions';
+import { getTodos, deleteTodo, setSortBy } from '../actions/todoActions';
+import { deleteList } from '../actions/listActions';
+import { filterTodos } from '../utils/filterTodos'; 
+import { sortTodos } from '../utils/sortTodos'; 
 import PropTypes from 'prop-types';
 import AppNavbar from './AppNavbar';
+import ListDropdown from './ListDropdown'; 
 
 import { FaPenToSquare, FaCheck, FaFlag, FaPlus } from 'react-icons/fa6';
 import '../App.css';
 
 class TodoList extends Component {
+
     state = {
         loaded: false
         }
@@ -19,6 +24,10 @@ class TodoList extends Component {
         isAuthenticated: PropTypes.bool,
         user: PropTypes.object.isRequired,
         todo: PropTypes.object.isRequired,
+        list: PropTypes.object.isRequired,
+        currentList: PropTypes.object.isRequired,
+        viewType: PropTypes.string.isRequired,
+        sortBy: PropTypes.string.isRequired,
     }
 
     async getTodoList(userId) {
@@ -34,6 +43,14 @@ class TodoList extends Component {
         this.props.deleteTodo(id);
     }
 
+    onUpdateList = async (id) => {
+        this.props.navigate(`/lists/${id}/edit`);
+    }
+
+    setSortBy = (sortByValue) => {
+        this.props.setSortBy(sortByValue);
+    }
+
     formatDate = (dateString) => {
         const dt = new Date(dateString);
         return dt.toLocaleString('en-CA').replace(':00', '');
@@ -46,20 +63,57 @@ class TodoList extends Component {
     }
 
     render(){
-        const { isAuthenticated, user, todo } = this.props;
+        const { isAuthenticated, user, todo, list, currentList, viewType, sortBy } = this.props;
 
         if (isAuthenticated && user._id && !todo.loading && !this.state.loaded) {
             this.getTodoList(user._id);
+        }
+
+        let filteredTodos = [...todo.todos]; // Start with all todos
+        // Filter todos based on view type
+        if (viewType === 'scheduled') {
+            filteredTodos = filteredTodos.filter(todo => todo.due_date !== undefined && todo.due_date !== "");
+        } else if (viewType === 'flagged') {
+            filteredTodos = filteredTodos.filter(todo => todo.flag === 1);
+        } else if (viewType === 'list') {
+            filteredTodos = filteredTodos.filter(todo => todo.listId === currentList.id);
+        }
+
+        // Sort the filtered todos based on the selected criteria
+        const sortedFilteredTodos = sortTodos(filteredTodos, sortBy);
+
+        let heading = <h2 className="text-center">{currentList.name}</h2>;
+        if (viewType === 'scheduled') {
+            heading = <h2 className="text-center">Scheduled Todos</h2>;
+        } else if (viewType === 'flagged') {
+            heading = <h2 className="text-center">Flagged Todos</h2>;
         }
 
         return (
             <div>
                 <AppNavbar/>
                 {isAuthenticated ? 
-                <Container>                    
-                    {!todo.loading && this.state.loaded && todo.todos.length ? 
+                <Container>
+                    <div>
+                        {heading}
+                    </div>
+
+                    <div className="d-flex justify-content-end mb-2">
+                        <ListDropdown
+                                onUpdateList={() => this.onUpdateList(currentList.id)}
+                                onDeleteList={this.props.deleteList} // Pass deleteList action directly
+                                filteredTodos={filteredTodos}
+                                sortBy={sortBy}
+                                setSortBy={this.setSortBy}
+                                currentList={currentList}
+                                viewType={viewType}
+                                lists={list.lists}
+                        />
+                    </div>
+                    
+                    {!todo.loading && !currentList.loading && this.state.loaded && sortedFilteredTodos.length ? 
                         <div className="col">
-                            {todo.todos.map((todo)=>(
+                            {sortedFilteredTodos.map((todo)=>(
                                 <div className="col-md" key={todo._id}>
                                 <Card className="mb-3 shadow-sm">
                                     <CardBody style={{padding: "5px"}}>
@@ -104,7 +158,7 @@ class TodoList extends Component {
                 
                 {isAuthenticated ?
                 <Fragment>
-                    {todo.todos.length ? null :
+                    {sortedFilteredTodos.length ? null :
                         <Alert color="info" className="text-center">No Todos Found.</Alert>
                     }
                     <Container className="sticky-bottom mb-4 add-todo-btn">
@@ -127,7 +181,11 @@ class TodoList extends Component {
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
     user: state.auth.user,
-    todo: state.todo
+    todo: state.todo,
+    list: state.list,
+    currentList: state.list.currentList,
+    viewType: state.todo.viewType, 
+    sortBy: state.todo.sortBy
 })
 
 function withRouter(Component) {
@@ -145,4 +203,4 @@ function withRouter(Component) {
 
 const TodoListWithRouter = withRouter(TodoList);
 
-export default connect(mapStateToProps, { getTodos, deleteTodo })(TodoListWithRouter);
+export default connect(mapStateToProps, { getTodos, deleteTodo, deleteList, setSortBy, filterTodos, sortTodos })(TodoListWithRouter);

@@ -15,14 +15,16 @@ class EditTodo extends Component {
         description: '',
         due_date: '',
         flag: false,
-        priority: ''
+        priority: '',
+        listId: ''
     }
 
     static propTypes = {
         updateTodo: PropTypes.func.isRequired,
         getTodo: PropTypes.func.isRequired,
         isAuthenticated: PropTypes.bool,
-        todo: PropTypes.object.isRequired
+        todo: PropTypes.object.isRequired,
+        currentList: PropTypes.object.isRequired,
     }
 
     async componentDidMount() {
@@ -38,7 +40,8 @@ class EditTodo extends Component {
                 description: todo.description,
                 due_date: todo.due_date,
                 flag: todo.flag,
-                priority: todo.priority
+                priority: todo.priority,
+                listId: todo.listId 
             });
         }
     }
@@ -52,7 +55,7 @@ class EditTodo extends Component {
         e.preventDefault();
 
         const id = this.props.id;
-        const { title, description, due_date, flag, priority } = this.state;
+        const { title, description, due_date, flag, priority, listId } = this.state;
     
         if (title.trim() !== '') { // Check if the title is not empty or only whitespace
             const todo = {
@@ -60,7 +63,8 @@ class EditTodo extends Component {
                 description,
                 due_date,
                 flag, 
-                priority
+                priority,
+                listId 
             };
             await this.props.updateTodo(id, todo);
             this.props.navigate('/todos');
@@ -71,7 +75,7 @@ class EditTodo extends Component {
         const { title, description, due_date, flag, priority } = this.state;
         const { loading } = this.props.todo;
 
-        if (loading || !title) {
+        if (!title) {
             return (
                 <div className="loader-container">
                     <div>Loading...</div>
@@ -199,7 +203,8 @@ class EditTodo extends Component {
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
-    todo: state.todo.todo
+    todo: state.todo.todo,
+    currentList: state.list.currentList 
 });
 
 function withRouter(Component) {

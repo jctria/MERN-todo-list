@@ -8,8 +8,8 @@ import {
     LOGIN_FAIL, 
     LOGOUT_SUCCESS, 
     REGISTER_SUCCESS, 
-    REGISTER_FAIL 
-} from './types';
+    REGISTER_FAIL } from './types';
+import { fetchAndSetFirstListAsCurrent, clearCurrentList } from './listActions';
 
 export const loadUser = () => async (dispatch, getState) => {
     dispatch({ type: USER_LOADING });
@@ -46,8 +46,14 @@ export const register = ({name, email, password}) => async (dispatch) => {
 
         await dispatch(loadUser());
 
+        const userId = res.data?.user?.id; // Use optional chaining
+        if (userId) {
+            dispatch(fetchAndSetFirstListAsCurrent(userId));
+        } else {
+            console.error("User ID not found in registration response.");
+        }
     } catch (error) {
-        dispatch(returnErrors(error.response.data, error.response.status, 'REGISTER_FAIL'));
+        dispatch(returnErrors(error.response?.data, error.response?.status, 'REGISTER_FAIL'));
         dispatch({
             type: REGISTER_FAIL
         });
@@ -71,9 +77,15 @@ export const login = ({ email, password }) => async (dispatch) => {
         });
 
         await dispatch(loadUser()); 
-
+        
+        const userId = res.data?.user?.id; // Use optional chaining
+        if (userId) {
+            dispatch(fetchAndSetFirstListAsCurrent(userId));
+        } else {
+            console.error("User ID not found in login response.");
+        }
     } catch (error) {
-        dispatch(returnErrors(error.response.data, error.response.status, 'LOGIN_FAIL'));
+        dispatch(returnErrors(error.response?.data, error.response?.status, 'LOGIN_FAIL'));
         dispatch({
             type: LOGIN_FAIL
         });

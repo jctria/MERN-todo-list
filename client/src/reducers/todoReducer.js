@@ -4,12 +4,16 @@ import {
     ADD_TODO, 
     UPDATE_TODO, 
     DELETE_TODO, 
-    TODOS_LOADING
+    TODOS_LOADING, 
+    SET_VIEW_TYPE, 
+    SET_SORT_BY 
 } from '../actions/types';
 
 const initialState = {
     todos: [],
     todo: {},
+    viewType: 'list',
+    sortBy: 'creationDate',
     loading: false
 }
 
@@ -50,6 +54,18 @@ export default function(state=initialState, action) {
                     }
                     return todo; 
                 })
+            };
+
+        case SET_VIEW_TYPE:
+            return {
+                ...state,
+                viewType: action.payload,
+            };
+
+        case SET_SORT_BY:
+            return {
+                ...state,
+                sortBy: action.payload,
             };
 
         case TODOS_LOADING:

@@ -6,6 +6,10 @@ const TodoSchema = new Schema({
         type: String,
         required: true
     },
+    listId: {
+        type: String,
+        required: true
+    },
     title: {
         type: String,
         required: true
@@ -21,8 +25,8 @@ const TodoSchema = new Schema({
     },
     priority: { 
         type: String, 
-        enum: ['', '!', '!!', '!!!'], 
-        default: '' 
+        enum: ['', '!', '!!', '!!!'], // Define enum values for priority levels
+        default: '' // Default priority level
     },
     creation_date: {
         type: Date,

@@ -27,9 +27,9 @@ module.exports.get_todo = async (req, res) => {
 
 module.exports.post_todo = async (req, res) => {
     const userId = req.params.id; 
-    const { title, description, due_date, flag, priority } = req.body;
+    const { listId, title, description, due_date, flag, priority } = req.body;
     try {
-        const newTodo = new Todo({ userId, title, description, due_date, flag, priority });
+        const newTodo = new Todo({ userId, listId, title, description, due_date, flag, priority });
         const savedTodo = await newTodo.save();
         res.json(savedTodo);
     } catch (err) {

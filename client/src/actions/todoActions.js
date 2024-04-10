@@ -5,7 +5,9 @@ import {
     ADD_TODO, 
     DELETE_TODO, 
     UPDATE_TODO, 
-    TODOS_LOADING
+    TODOS_LOADING, 
+    SET_VIEW_TYPE, 
+    SET_SORT_BY 
 } from './types';
 import { returnErrors } from './errorActions';
 
@@ -42,6 +44,7 @@ export const addTodo = (todo) => async (dispatch) => {
             type: ADD_TODO,
             payload: res.data
         });
+        dispatch(setViewType('list'));
     } catch (err) {
         dispatch(returnErrors(err.response.data, err.response.status));
     }
@@ -69,6 +72,22 @@ export const updateTodo = (id, todo) => async (dispatch) => {
     } catch (err) {
         dispatch(returnErrors(err.response.data, err.response.status));
     }
+}
+
+export const setViewType = (viewType) => {
+    localStorage.setItem('viewType', viewType); // Save viewType to localStorage
+    return {
+        type: SET_VIEW_TYPE,
+        payload: viewType,
+    };
+}
+
+export const setSortBy = (sortBy) => {
+    localStorage.setItem('sortBy', sortBy); // Save sortBy to localStorage
+    return {
+        type: SET_SORT_BY,
+        payload: sortBy,
+    };
 }
 
 export const setTodosLoading = () => {

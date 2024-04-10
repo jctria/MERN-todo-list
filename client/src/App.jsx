@@ -9,6 +9,8 @@ import AddTodo from './components/AddTodo';
 import EditTodo from './components/EditTodo';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
+import AddList from './components/AddList';
+import EditList from './components/EditList';
 
 class App extends Component {
     componentDidMount(){
@@ -25,6 +27,8 @@ class App extends Component {
                             <Route path='/todos/:id/edit' element={<EditTodo />} />
                             <Route path='/login' element={<Login />} />
                             <Route path='/register' element={<Register />} />
+                            <Route path='/add-list' element={<AddList />} />
+                            <Route path='/lists/:id/edit' element={<EditList />} />
                         </Routes>
                     </div> 
                 </BrowserRouter>

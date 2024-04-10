@@ -6,6 +6,7 @@ const config = require('config');
 // routes
 const authRoutes = require('./routes/auth');
 const todoRoutes = require('./routes/todo');
+const listRoutes = require('./routes/list');
 
 const app = express();
 app.use(express.json());
@@ -13,6 +14,7 @@ app.use(express.json());
 // use routes
 app.use('/api', authRoutes);
 app.use('/api', todoRoutes);
+app.use('/api', listRoutes);
 
 // used in production to serve client files
 if (process.env.NODE_ENV === 'production') {

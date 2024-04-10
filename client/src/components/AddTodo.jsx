@@ -23,7 +23,8 @@ class AddTodo extends Component {
         addTodo: PropTypes.func.isRequired,
         isAuthenticated: PropTypes.bool,
         user: PropTypes.object.isRequired,
-        todo: PropTypes.object.isRequired
+        todo: PropTypes.object.isRequired,
+        currentList: PropTypes.object.isRequired,
     }
 
     onChange = (e) => {
@@ -33,7 +34,7 @@ class AddTodo extends Component {
     onSubmit = async (e) => {
         e.preventDefault();
 
-        const { user } = this.props;
+        const { user, currentList } = this.props;
         let { title, description, due_date, flag, priority } = this.state;
 
         // If no radio button is selected for priority, set it to an empty string
@@ -44,6 +45,7 @@ class AddTodo extends Component {
         if (title.trim() !== '') { // Check if the title is not empty or only whitespace
             const todo = {
                 userId: user._id,
+                listId: currentList.id, 
                 title,
                 description,
                 due_date,
@@ -181,7 +183,8 @@ class AddTodo extends Component {
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
     user: state.auth.user,
-    todo: state.todo
+    todo: state.todo,
+    currentList: state.list.currentList 
 });
 
 function withRouter(Component) {

@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const List = require('../models/List');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const bcrypt = require('bcrypt');
@@ -28,6 +29,12 @@ module.exports.signup = async (req, res) => {
         // Create salt and hash
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(password, salt);
+        await user.save();
+
+        // Create default list and set as current list for the user
+        const defaultList = new List({ userId: user._id, listName: 'List 1' });
+        await defaultList.save();
+        user.currentList = defaultList._id;
         await user.save();
 
         // Generate JWT
