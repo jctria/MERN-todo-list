@@ -1,0 +1,23 @@
+.container a {
+  text-decoration: none; 
+}
+
+.priority {
+color: orange;
+}
+
+.priority-label {
+  margin-right: 10px; 
+  }
+
+.due-date-overdue {
+color: red;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+  width: 100vw; 
+}

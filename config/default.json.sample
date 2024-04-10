@@ -1,0 +1,4 @@
+{
+  "dbURI": "YOUR_DATABASE_CONNECTION_URI",
+  "jwtSecret": "YOUR_JWT_SECRET"
+}
