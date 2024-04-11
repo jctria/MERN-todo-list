@@ -1,7 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const config = require('config');
 
 // routes
 const authRoutes = require('./routes/auth');
@@ -25,7 +25,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // connect to db and run server on port 4000
-const dbURI = config.get('dbURI');
+const dbURI = process.env.MONGODB_URI;
 const port = process.env.PORT || 4000;
 mongoose.connect(dbURI)
     .then(() => app.listen(port, () => console.log(`Server running on http://localhost:${port}`)))

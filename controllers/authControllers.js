@@ -1,7 +1,6 @@
 const User = require('../models/User');
 const List = require('../models/List');
 const jwt = require('jsonwebtoken');
-const config = require('config');
 const bcrypt = require('bcrypt');
 const { isEmail } = require('validator');
 
@@ -40,7 +39,7 @@ module.exports.signup = async (req, res) => {
         // Generate JWT
         const token = jwt.sign(
             { id: user._id }, 
-            config.get('jwtsecret'), 
+            process.env.JWT_SECRET, 
             { expiresIn: 3600 }
         );
 
@@ -81,7 +80,7 @@ module.exports.login = async (req, res) => {
         // Generate JWT
         const token = jwt.sign(
             { id: user._id },
-            config.get('jwtsecret'),
+            process.env.JWT_SECRET,
             { expiresIn: 3600 }
         );
 
