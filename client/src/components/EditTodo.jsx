@@ -51,6 +51,10 @@ class EditTodo extends Component {
         this.setState({ [e.target.name]: value });
     }
 
+    clearDueDate = () => {
+        this.setState({ due_date: '' });
+    };
+
     onSubmit = async (e) => {
         e.preventDefault();
 
@@ -117,13 +121,22 @@ class EditTodo extends Component {
                         />
                         <br/>
                         <Label for="due_date">Due Date</Label>
+                        <div className="d-flex">
                         <Input
                             type="datetime-local"
                             name="due_date"
                             id="due_date"
                             value={due_date}
                             onChange={this.onChange}
+                            style={{ flex: 1 }}
                         />
+                        <button 
+                            type="button" 
+                            className="btn btn-outline-dark clear-button" 
+                            onClick={this.clearDueDate}
+                        >Clear
+                        </button>
+                        </div>
                         <br/>
                         <Label className="form-check-label" for="flag">
                             <FaFlag /> Flag For Importance
@@ -134,7 +147,7 @@ class EditTodo extends Component {
                             name="flag"
                             id="flag"
                             style={{marginLeft: '10px'}}
-                            checked={flag} // Use checked instead of value for checkbox
+                            checked={flag} 
                             onChange={this.onChange}
                         />
                         <br/>

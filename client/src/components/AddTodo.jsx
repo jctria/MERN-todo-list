@@ -31,6 +31,10 @@ class AddTodo extends Component {
         this.setState({ [e.target.name]: e.target.value })
     }
 
+    clearDueDate = () => {
+        this.setState({ due_date: '' });
+    };
+
     onSubmit = async (e) => {
         e.preventDefault();
 
@@ -95,14 +99,22 @@ class AddTodo extends Component {
                         />
                         <br/>
                         <Label for="due_date">Due Date</Label>
+                        <div className="d-flex">
                         <Input
                             type="datetime-local"
-                            onfocus="this.showPicker()"
                             name="due_date"
                             id="due_date"
                             value={due_date}
                             onChange={this.onChange}
+                            style={{ flex: 1 }}
                         />
+                        <button 
+                            type="button" 
+                            className="btn btn-outline-dark clear-button" 
+                            onClick={this.clearDueDate}
+                        >Clear
+                        </button>
+                        </div>
                         <br/>
                         <Label className="form-check-label" for="flag">
                             <FaFlag /> Flag For Importance

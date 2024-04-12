@@ -161,10 +161,10 @@ class TodoList extends Component {
                     {sortedFilteredTodos.length ? null :
                         <Alert color="info" className="text-center">No Todos Found.</Alert>
                     }
-                    <Container className="sticky-bottom mb-4 add-todo-btn">
+                    <Container className="mb-4 add-todo-btn">
                         <Link to="/add-todo" style={{textDecoration: 'none'}}>
                             <div className="d-grid gap-2">
-                                <button className="btn btn-outline-dark text-start"> 
+                                <button className="btn btn-outline-dark text-start mb-3"> 
                                     <FaPlus /> Add Todo 
                                 </button>
                             </div>

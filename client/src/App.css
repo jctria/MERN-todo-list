@@ -14,7 +14,8 @@
 
 /* TodoList */
 .add-todo-btn {
-  position: relative;
+  position: sticky;
+  bottom: 0;
   z-index: 1; 
 }
   
@@ -101,5 +102,16 @@
   .priority-radio {
     margin-left: 16px; 
     display: block;
+  }
+}
+
+.clear-button {
+  display: none; 
+}
+
+@media (max-width: 768px) { /* Adjust this value based on your design's breakpoint */
+  .clear-button {
+      display: inline-block; 
+      margin-left: 0.5rem; 
   }
 }
